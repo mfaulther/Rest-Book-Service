@@ -1,11 +1,10 @@
 package restbookservice.controller;
 
 import org.springframework.web.bind.annotation.*;
+import restbookservice.domain.Book;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -13,48 +12,55 @@ public class BookController {
 
     public int counter = 4;
 
-    List<Map<String, String>> books = new ArrayList<>(){{
-        add(new HashMap<>() {{ put("id", "1"); put("author", "Franz Kafka"); put("title", "The Process"); }});
-        add(new HashMap<>() {{ put("id", "2"); put("author", "Jack Kerouac"); put("title", "On the Road"); }});
-        add(new HashMap<>() {{ put("id", "3"); put("author", "William Gibson"); put("title", "Neuromancer"); }});
-    }};
+    List<Book> books = new ArrayList<>(){{
+            add (new Book(1, "Franz Kafka", "The Process"));
+            add (new Book(2, "Jack Kerouac", "On the Road"));
+            add (new Book(3, "William Gibson", "Neuromancer"));
+        }};
 
     @GetMapping("/books")
-    public List<Map<String, String>> getAllBooks() {
+    public List<Book> getAllBooks() {
         return books;
     }
 
     @GetMapping("/books/{id}")
-    public Map<String, String> getOneBook(@PathVariable String id) {
+    public Book getOneBook(@PathVariable int id) {
+        return getBookById(id);
+    }
 
-        return getBook(id);
-
+    private Book getBookById(@PathVariable int id) {
+        return books
+                .stream()
+                .filter(x -> x.getId() == id)
+                .findFirst()
+                .orElseThrow(BookNotFoundException::new);
     }
 
     @PostMapping("/books")
-    public Map<String, String> createBook(@RequestBody Map<String, String> book) {
-        book.put("id", String.valueOf(counter++));
+    public Book createBook(@RequestBody Book book) {
+        book.setId(counter++);
         books.add(book);
         return book;
     }
 
-
     @PutMapping("/books/{id}")
-    public Map<String, String> updateBook(@PathVariable String id, @RequestBody Map<String, String> book) {
-        Map<String, String> newBook = getBook(id);
-        newBook.putAll(book);
+    public Book updateBook(@PathVariable int id, @RequestBody Book book) {
+        Book newBook = getBookById(id);
+
+        newBook.setId(id);
+        if (book.getAuthor() != null) {
+            newBook.setAuthor(book.getAuthor());
+        }
+        if (book.getTitle() != null) {
+            newBook.setTitle(book.getTitle());
+        }
         return newBook;
     }
 
     @DeleteMapping("/books/{id}")
-    public void deleteBook(@PathVariable String id) {
-        Map<String, String> book = getBook(id);
+    public void deleteBook(@PathVariable int id) {
+        Book book = getBookById(id);
         books.remove(book);
     }
-
-    private Map<String, String> getBook(String id) {
-        return books.stream().filter(book-> book.get("id").equals(id)).findFirst().orElseThrow(BookNotFoundException::new);
-    }
-
 
 }
