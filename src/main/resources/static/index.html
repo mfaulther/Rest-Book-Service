@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+
+<h1> Простой REST для работы с книгами </h1>
+
+<p> GET /api/books - Получить список книг </p>
+
+<p> GET /api/books/{id} - Получить книгу по id. Если книги не существует ответ со HTTP-статусом 404</p>
+
+<p> POST /api/books [Request Body] - Добавить книгу </p>
+
+<p>  Формат [Request Body] - JSON с полями year, author, title,   </p>
+
+<p> Пример: {'year': 1924, 'author': 'Franz Kafka', 'title': 'The Castle'} </p>
+
+</body>
+</html>

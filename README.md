@@ -2,6 +2,15 @@
 Simple REST service for working (CRUD operations) with books 
 
 ### Запуск приложения
-с Gradle: gradle bootRun
+с Gradle
 
-без Gradle (если не установлен): ./gradlew bootRun
+```bash
+gradle bootRun
+```
+
+без Gradle (если не установлен):
+
+```bash
+./gradlew bootRun
+```
+
